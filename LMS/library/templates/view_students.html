@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student</title>
+    {% extends 'base.html' %}
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+        <div id="message" class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+
+        <div class="search mb-4">
+            <input type="text" class="form-control" id="student_search_input" name="student_name" placeholder="Search student" onkeyup="search_student()">
+            <div id="view_searched" class="mt-3" style="display:none;">
+                <label class="h5">Search Results:</label>
+                <ul class="list-group" id="search_results_list"></ul>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover" style="background-color: #A7B7B7;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Study Program</th>
+                    <th>Guardian/Parent</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr id="{{ student.fullname }}" class="student">
+                    <td class="roll_number">{{ student.roll_number }}</td>
+                    <td class="name">{{ student.fullname }}</td>
+                    <td>{{ student.address }}</td>
+                    <td>{{ student.program }}</td>
+                    <td>{{ student.Guardian_name }}</td>
+                    <td>{{ student.Email }}</td>
+                    <td>
+                        <a href="edit/student/{{ student.roll_number }}" class="text-primary"><i class="fa fa-edit"></i></a>
+                        | <a href="delete/student/{{ student.roll_number }}" class="text-danger"><i class="fa fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    function search_student() {
+        var input, students, view;
+        input = document.getElementById('student_search_input').value.toLowerCase();
+        students = document.getElementsByClassName('student');
+        view = document.getElementById("search_results_list");
+        view.innerHTML = "";  // Clear previous results
+
+        for (var i = 0; i < students.length; i++) {
+            if (input !== "") {
+                if (students[i].innerHTML.toLowerCase().indexOf(input) > -1) {
+                    var student_name = students[i].getElementsByClassName("name")[0].textContent;
+                    var student_roll_number = students[i].getElementsByClassName("roll_number")[0].textContent;
+
+                    var link = document.createElement("a");
+                    link.setAttribute("href", "#" + student_name);
+                    link.className = "list-group-item list-group-item-action";
+
+                    var list_item = document.createTextNode(student_name + " (Roll No: " + student_roll_number + ")");
+                    link.appendChild(list_item);
+                    view.appendChild(link);
+                    view.parentElement.style.display = "block";  // Show results
+                }
+            } else {
+                view.parentElement.style.display = "none";  // Hide results if input is empty
+            }
+        }
+    }
+    </script>
+
+    {% endblock %}
+</body>
+</html>
