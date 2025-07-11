@@ -29,7 +29,7 @@ A web-based Library Management System built with Django that allows users to sea
 
 ## Live Demo
 
- [Live Website](https://librarymanagementsystem-725y.onrender.com)
+ [Live Website](https://librarymanagementsystem-1-ocox.onrender.com/)
 
 ---
 
