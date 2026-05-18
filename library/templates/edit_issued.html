@@ -1,0 +1,11 @@
+<title>Edit Issued Book</title>
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/view_books_issued" class="btn btn-danger">Cancel</a>
+</form>
+{% endblock %}

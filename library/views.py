@@ -84,8 +84,15 @@ def edit_student_data(request,roll):
     except Exception as error:
         print(f"{error} occured at edit_student_data view")
 
-def edit_book_data(request,id):
-    return HttpResponse(f"<label>A book with ID: {id} could not be edited...</label><h2>The feature is comming soon</h2>")
+def edit_book_data(request, id):
+    obj = BookInstance.objects.get(id=id)
+    form = Book_instanceForm(instance=obj)
+    if request.method == "POST":
+        form = Book_instanceForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect('/view_books')
+    return render(request, 'edit_book.html', {'form': form})
 
 def delete_student(request, roll):
     Students.objects.filter(roll_number=roll).delete()
@@ -104,5 +111,11 @@ def return_issued_book(request, id):
     return redirect('/view_books_issued')
 
 def edit_issued(request, id):
-    obj=Book_Issue.objects.get(id=id)
-    return HttpResponse(f"<h2>Edit Issued Book</h2><label>Book <i>{obj.book_instance.book.book_title}</i> issued to <i>{obj.student.fullname}</i> could not be edited..</label><h2>The feature is comming soon</h2>")
+    obj = Book_Issue.objects.get(id=id)
+    form = Book_IssueForm(instance=obj)
+    if request.method == "POST":
+        form = Book_IssueForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect('/view_books_issued')
+    return render(request, 'edit_issued.html', {'form': form})
