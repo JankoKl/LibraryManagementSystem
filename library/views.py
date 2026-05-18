@@ -91,8 +91,9 @@ def delete_student(request, roll):
     Students.objects.filter(roll_number=roll).delete()
     return redirect('/show_students')
 
-def delete_book(request,id):
-    return HttpResponse(f"<h2>Delete Book</h2><label>Book with ID: {id} could not be deleted..</label><h2>The feature is comming soon</h2>")
+def delete_book(request, id):
+    BookInstance.objects.filter(id=id).delete()
+    return redirect('/view_books')
 
 def return_issued_book(request, id):
     obj = Book_Issue.objects.get(id=id)
