@@ -87,9 +87,9 @@ def edit_student_data(request,roll):
 def edit_book_data(request,id):
     return HttpResponse(f"<label>A book with ID: {id} could not be edited...</label><h2>The feature is comming soon</h2>")
 
-def delete_student(request,roll):
-    return HttpResponse(f"<h2>Delete Student</h2><label>Student with Roll Number: {roll} could not be deleted...</label><h2>The feature is comming soon</h2>")
-    pass
+def delete_student(request, roll):
+    Students.objects.filter(roll_number=roll).delete()
+    return redirect('/show_students')
 
 def delete_book(request,id):
     return HttpResponse(f"<h2>Delete Book</h2><label>Book with ID: {id} could not be deleted..</label><h2>The feature is comming soon</h2>")
