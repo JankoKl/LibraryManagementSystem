@@ -3,6 +3,9 @@ from .forms import StudentsForm, BookForm, Book_IssueForm,Book_instanceForm
 from .models import Students, Book, Book_Issue,BookInstance
 from datetime import date
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.shortcuts import redirect, render
 
 def index(request):
     return(render(request, 'index.html'))
@@ -120,3 +123,16 @@ def edit_issued(request, id):
             form.save()
             return redirect('/view_books_issued')
     return render(request, 'edit_issued.html', {'form': form})
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # automatski uloguje korisnika posle registracije
+            return redirect('index')  # vrati na početnu stranicu
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/register.html', {'form': form})

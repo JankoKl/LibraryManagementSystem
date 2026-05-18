@@ -24,5 +24,6 @@ urlpatterns = [
     path('delete/book/<str:id>', views.delete_book, name="Delete book data"),
     path('return_book/<int:id>', views.return_issued_book, name="return_issued_book"),
     path('edit_issued/<int:id>', views.edit_issued, name="edit_issued"),
+    path('register/', views.register, name='register'),
     path('api/', include(router.urls)),
 ]
