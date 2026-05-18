@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,HttpResponse
 from .forms import StudentsForm, BookForm, Book_IssueForm,Book_instanceForm
 from .models import Students, Book, Book_Issue,BookInstance
-
+from datetime import date
 
 def index(request):
     return(render(request, 'index.html'))
@@ -94,9 +94,13 @@ def delete_student(request,roll):
 def delete_book(request,id):
     return HttpResponse(f"<h2>Delete Book</h2><label>Book with ID: {id} could not be deleted..</label><h2>The feature is comming soon</h2>")
 
-def return_issued_book(request,id):   
-    obj=Book_Issue.objects.get(id=id)
-    return HttpResponse(f"<h2>Return Issued Book</h2><label>Book <i>{obj.book_instance.book.book_title}</i> issued to <i>{obj.student.fullname}</i> could not be returned..</label><h2>The feature is comming soon</h2>")
+def return_issued_book(request, id):
+    obj = Book_Issue.objects.get(id=id)
+    obj.date_returned = date.today()
+    obj.book_instance.Is_borrowed = False
+    obj.book_instance.save()
+    obj.save()
+    return redirect('/view_books_issued')
 
 def edit_issued(request, id):
     obj=Book_Issue.objects.get(id=id)
