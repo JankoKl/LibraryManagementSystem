@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect,HttpResponse
 from .forms import StudentsForm, BookForm, Book_IssueForm,Book_instanceForm
 from .models import Students, Book, Book_Issue,BookInstance
 from datetime import date
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return(render(request, 'index.html'))
 
-
+@login_required
 def add_new_student(request):
     if request.method=="POST":
         form = StudentsForm((request.POST))
@@ -17,7 +18,7 @@ def add_new_student(request):
         form = StudentsForm
     return (render(request, 'add_new_student.html', {'form':form}))
 
-
+@login_required
 def add_new_book(request):
     if request.method=="POST":
         form = BookForm(request.POST)
@@ -30,14 +31,14 @@ def add_new_book(request):
         form = BookForm
         form_instance=Book_instanceForm
         return (render(request, 'add_new_book.html', {'form':form,"form_instance":form_instance}))
-
+@login_required
 def add_new_book_instance(request):
     form=Book_instanceForm(request.POST)
     if form.is_valid():
         form.save()
     return redirect('/view_books')
 
-
+@login_required
 def add_book_issue(request):
     if request.method=="POST":
         form = Book_IssueForm(request.POST)
@@ -53,20 +54,20 @@ def add_book_issue(request):
     else:
         context={'form':Book_IssueForm,"book":BookInstance.objects.filter(Is_borrowed=False)}
         return render(request, 'add_book_issue.html',context=context)
-
+@login_required
 def view_students(request):
     students = Students.objects.order_by('-id')
     return render(request,'view_students.html', {'students': students})
-
+@login_required
 def view_books(request):
     books=BookInstance.objects.order_by('id')
     return render(request,'view_books.html', {'books': books})
-
+@login_required
 def view_bissue(request):
     issue = Book_Issue.objects.order_by('-id')
     return render(request,'issue_records.html', {'issue': issue})
 
-
+@login_required
 def edit_student_data(request,roll):
     try:
         if request.method == "POST":
@@ -83,7 +84,7 @@ def edit_student_data(request,roll):
             return render(request,'edit_student_data.html',{'student':student})
     except Exception as error:
         print(f"{error} occured at edit_student_data view")
-
+@login_required
 def edit_book_data(request, id):
     obj = BookInstance.objects.get(id=id)
     form = Book_instanceForm(instance=obj)
@@ -93,15 +94,15 @@ def edit_book_data(request, id):
             form.save()
             return redirect('/view_books')
     return render(request, 'edit_book.html', {'form': form})
-
+@login_required
 def delete_student(request, roll):
     Students.objects.filter(roll_number=roll).delete()
     return redirect('/show_students')
-
+@login_required
 def delete_book(request, id):
     BookInstance.objects.filter(id=id).delete()
     return redirect('/view_books')
-
+@login_required
 def return_issued_book(request, id):
     obj = Book_Issue.objects.get(id=id)
     obj.date_returned = date.today()
@@ -109,7 +110,7 @@ def return_issued_book(request, id):
     obj.book_instance.save()
     obj.save()
     return redirect('/view_books_issued')
-
+@login_required
 def edit_issued(request, id):
     obj = Book_Issue.objects.get(id=id)
     form = Book_IssueForm(instance=obj)
